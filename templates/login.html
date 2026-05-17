@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+
+{% block title %}लॉगिन - खाद्य पोषण विश्लेषक{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+    }
+
+    .login-box {
+        background: white;
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 450px;
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .login-header h1 {
+        font-size: 1.8rem;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+        color: #95a5a6;
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        color: var(--dark);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.9rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+    }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .remember-me input {
+        width: auto;
+        cursor: pointer;
+    }
+
+    .remember-me label {
+        margin: 0;
+        cursor: pointer;
+        color: #7f8c8d;
+        font-weight: 500;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 0.9rem;
+        background: linear-gradient(135deg, var(--primary), #FF8A80);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    }
+
+    .login-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+        color: #7f8c8d;
+    }
+
+    .login-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .login-footer a:hover {
+        text-decoration: underline;
+    }
+
+    .error-message {
+        background: rgba(231, 76, 60, 0.1);
+        border-left: 4px solid var(--danger);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        color: var(--danger);
+        display: none;
+        animation: slideInUp 0.3s ease-out;
+    }
+
+    .error-message.show {
+        display: block;
+    }
+
+    .success-message {
+        background: rgba(46, 204, 113, 0.1);
+        border-left: 4px solid var(--success);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        color: var(--success);
+        display: none;
+        animation: slideInUp 0.3s ease-out;
+    }
+
+    .success-message.show {
+        display: block;
+    }
+
+    .forgot-password {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .forgot-password a {
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .forgot-password a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+        .login-box {
+            padding: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-box">
+        <div class="login-header">
+            <h1>🔐 लॉगिन करें</h1>
+            <p>अपने खाते में प्रवेश करें</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="username">उपयोगकर्ता नाम *</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    required
+                    placeholder="अपना उपयोगकर्ता नाम दर्ज करें"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">पासवर्ड *</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required
+                    placeholder="अपना पासवर्ड दर्ज करें"
+                >
+            </div>
+
+            <div class="remember-me">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">मुझे याद रखें</label>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                लॉगिन करें
+            </button>
+        </form>
+
+        <div class="forgot-password">
+            <a href="#">पासवर्ड भूल गए?</a>
+        </div>
+
+        <div class="login-footer">
+            खाता नहीं है? <a href="{% url 'signup' %}">अभी साइन अप करें</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function handleLogin(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const remember = document.getElementById('remember').checked;
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        // Clear messages
+        errorMessage.classList.remove('show');
+        successMessage.classList.remove('show');
+
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'लॉगिन हो रहे हैं...';
+
+        try {
+            const response = await fetch('/api/login/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                successMessage.textContent = '✓ लॉगिन सफल! आप डैशबोर्ड पर जा रहे हैं...';
+                successMessage.classList.add('show');
+                
+                if (remember) {
+                    localStorage.setItem('username', username);
+                }
+
+                setTimeout(() => {
+                    window.location.href = '{% url "dashboard" %}';
+                }, 1500);
+            } else {
+                errorMessage.textContent = '✗ ' + data.message;
+                errorMessage.classList.add('show');
+            }
+        } catch (error) {
+            errorMessage.textContent = '✗ त्रुटि: ' + error.message;
+            errorMessage.classList.add('show');
+        } finally {
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'लॉगिन करें';
+        }
+    }
+
+    // Load saved username if exists
+    window.addEventListener('load', () => {
+        const savedUsername = localStorage.getItem('username');
+        if (savedUsername) {
+            document.getElementById('username').value = savedUsername;
+            document.getElementById('remember').checked = true;
+        }
+    });
+</script>
+{% endblock %}

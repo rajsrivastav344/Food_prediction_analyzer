@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+
+{% block title %}परिचय - खाद्य पोषण विश्लेषक{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .about-hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .about-hero p {
+        font-size: 1.2rem;
+        animation: slideInUp 0.6s ease-out 0.2s both;
+    }
+
+    .about-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .section {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .section h2 {
+        color: var(--primary);
+        margin-bottom: 1rem;
+        font-size: 1.8rem;
+    }
+
+    .section p {
+        line-height: 1.8;
+        color: #7f8c8d;
+        margin-bottom: 1rem;
+    }
+
+    .feature-list {
+        list-style: none;
+        margin: 1.5rem 0;
+    }
+
+    .feature-list li {
+        padding: 0.8rem 0;
+        padding-left: 2rem;
+        position: relative;
+        color: var(--dark);
+    }
+
+    .feature-list li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--success);
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .team-member {
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .team-member:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .team-avatar {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .team-member h3 {
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .team-member .role {
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .stats-section {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 3rem 2rem;
+        border-radius: 15px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        text-align: center;
+        margin: 2rem 0;
+    }
+
+    .stat {
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.95rem;
+        opacity: 0.9;
+    }
+
+    .timeline {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 25px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, var(--primary), var(--secondary));
+    }
+
+    .timeline-item {
+        margin-bottom: 2rem;
+        padding-left: 80px;
+        position: relative;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: 8px;
+        top: 5px;
+        width: 34px;
+        height: 34px;
+        background: white;
+        border: 3px solid var(--primary);
+        border-radius: 50%;
+    }
+
+    .timeline-year {
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.3rem;
+    }
+
+    .timeline-desc {
+        color: var(--dark);
+    }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .value-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+        border: 2px solid #eee;
+        transition: all 0.3s ease;
+    }
+
+    .value-card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 10px 30px rgba(255, 107, 107, 0.1);
+        transform: translateY(-5px);
+    }
+
+    .value-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .value-card h3 {
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .value-card p {
+        color: #95a5a6;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .about-hero h1 {
+            font-size: 1.8rem;
+        }
+
+        .timeline::before {
+            left: 15px;
+        }
+
+        .timeline-item {
+            padding-left: 60px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="about-hero">
+    <h1>हमारे बारे में</h1>
+    <p>खाद्य पोषण विश्लेषण में क्रांति ला रहे हैं</p>
+</div>
+
+<!-- About Content -->
+<div class="about-content">
+    <!-- Mission Section -->
+    <div class="section">
+        <h2>🎯 हमारा मिशन</h2>
+        <p>
+            हम विश्वास करते हैं कि हर व्यक्ति को अपने पोषण के बारे में सही जानकारी होनी चाहिए। 
+            हमारा मिशन है कृत्रिम बुद्धिमत्ता का उपयोग करके खाद्य पदार्थों का विश्लेषण करना और 
+            भारत में शहरी लोगों को स्वास्थ्यकर जीवन जीने में मदद करना।
+        </p>
+        <p>
+            हम एक ऐसी दुनिया बनाना चाहते हैं जहाँ हर कोई अपने आहार के बारे में सचेत निर्णय ले सके।
+        </p>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="stat">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">खाद्य पदार्थ डेटाबेस</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">15+</div>
+            <div class="stat-label">स्वास्थ्य स्थितियाँ</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">विश्लेषण सटीकता</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">2024</div>
+            <div class="stat-label">स्थापना वर्ष</div>
+        </div>
+    </div>
+
+    <!-- Values Section -->
+    <div class="section">
+        <h2>💎 हमारे मूल्य</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">🤝</div>
+                <h3>विश्वास</h3>
+                <p>आपका डेटा सुरक्षित और गोपनीय है</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">✨</div>
+                <h3>गुणवत्ता</h3>
+                <p>सर्वोच्च स्तर का विश्लेषण प्रदान करना</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">♿</div>
+                <h3>सुलभता</h3>
+                <p>हर किसी के लिए सुलभ और आसान</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">🌱</div>
+                <h3>स्वास्थ्य</h3>
+                <p>स्वस्थ जीवन को बढ़ावा देना</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Section -->
+    <div class="section">
+        <h2>🚀 हमारी तकनीक</h2>
+        <p>
+            हम सबसे आधुनिक कृत्रिम बुद्धिमत्ता और मशीन लर्निंग तकनीकों का उपयोग करते हैं:
+        </p>
+        <ul class="feature-list">
+            <li>कंप्यूटर विजन आधारित खाद्य पहचान</li>
+            <li>उन्नत पोषण डेटाबेस</li>
+            <li>व्यक्तिगत स्वास्थ्य सुझाव</li>
+            <li>रीयल-टाइम विश्लेषण</li>
+            <li>बहुभाषी सहायता (हिंदी, अंग्रेजी)</li>
+            <li>सुरक्षित डेटा एन्क्रिप्शन</li>
+        </ul>
+    </div>
+
+    <!-- Journey Section -->
+    <div class="section">
+        <h2>📈 हमारी यात्रा</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-year">2024 - शुरुआत</div>
+                <div class="timeline-desc">हमारे प्रथम संस्करण का लॉन्च और बीटा परीक्षण</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">2024 - विस्तार</div>
+                <div class="timeline-desc">100 से अधिक खाद्य पदार्थों का जोड़ना</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">2024 - स्वास्थ्य सुविधाएं</div>
+                <div class="timeline-desc">स्वास्थ्य स्थिति आधारित सुझाव जोड़ना</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">भविष्य - अधिक सुविधाएं</div>
+                <div class="timeline-desc">व्यक्तिगत पोषण योजना और AI सहायक</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="section">
+        <h2>👥 हमारी टीम</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-avatar">🧠</div>
+                <h3>एआई विशेषज्ञ</h3>
+                <div class="role">मशीन लर्निंग</div>
+                <p>उन्नत एआई मॉडल विकास</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">⚕️</div>
+                <h3>पोषण विशेषज्ञ</h3>
+                <div class="role">स्वास्थ्य परामर्श</div>
+                <p>वैज्ञानिक पोषण संबंधी ज्ञान</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">💻</div>
+                <h3>विकास टीम</h3>
+                <div class="role">सॉफ्टवेयर इंजीनियरिंग</div>
+                <p>मजबूत और सुरक्षित प्लेटफॉर्म</p>
+            </div>
+            <div class="team-member">
+                <div class="team-avatar">📊</div>
+                <h3>डेटा वैज्ञानिक</h3>
+                <div class="role">डेटा विश्लेषण</div>
+                <p>सटीक और विश्वसनीय परिणाम</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vision Section -->
+    <div class="section">
+        <h2>🌟 हमारा भविष्य</h2>
+        <p>
+            हम एक ऐसे भविष्य की कल्पना करते हैं जहाँ:
+        </p>
+        <ul class="feature-list">
+            <li>हर शहरी परिवार खाद्य विश्लेषण का उपयोग करता है</li>
+            <li>स्वास्थ्य समस्याएं कम होती हैं</li>
+            <li>लोग अपने आहार के बारे में जागरूक निर्णय लेते हैं</li>
+            <li>हम भारत की सबसे विश्वस्त खाद्य विश्लेषण प्लेटफॉर्म बनते हैं</li>
+            <li>अंतर्राष्ट्रीय स्तर पर विस्तार करते हैं</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

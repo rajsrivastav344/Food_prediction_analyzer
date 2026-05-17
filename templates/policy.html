@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+
+{% block title %}गोपनीयता नीति - खाद्य पोषण विश्लेषक{% endblock %}
+
+{% block extra_css %}
+<style>
+    .policy-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+        background: white;
+    }
+
+    .policy-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid #eee;
+    }
+
+    .policy-header h1 {
+        font-size: 2.5rem;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .policy-header p {
+        color: #95a5a6;
+        font-size: 0.95rem;
+    }
+
+    .policy-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .policy-section h2 {
+        color: var(--primary);
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--secondary);
+    }
+
+    .policy-section h3 {
+        color: var(--dark);
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .policy-section p {
+        color: #7f8c8d;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+
+    .policy-list {
+        list-style: none;
+        margin-left: 1.5rem;
+    }
+
+    .policy-list li {
+        margin-bottom: 0.8rem;
+        padding-left: 1.5rem;
+        position: relative;
+        color: #7f8c8d;
+    }
+
+    .policy-list li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 1.2rem;
+    }
+
+    .highlight-box {
+        background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1));
+        padding: 1.5rem;
+        border-left: 4px solid var(--primary);
+        border-radius: 8px;
+        margin: 1.5rem 0;
+    }
+
+    .highlight-box strong {
+        color: var(--primary);
+    }
+
+    .toc {
+        background: #f9f9f9;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+
+    .toc h3 {
+        margin-top: 0;
+        color: var(--dark);
+    }
+
+    .toc-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .toc-list li {
+        margin-bottom: 0.5rem;
+    }
+
+    .toc-list a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .toc-list a:hover {
+        text-decoration: underline;
+    }
+
+    .update-note {
+        background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(255, 230, 109, 0.1));
+        padding: 1rem;
+        border-left: 4px solid var(--accent);
+        border-radius: 8px;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        margin-top: 3rem;
+    }
+
+    .contact-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .contact-link:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .policy-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .policy-section h2 {
+            font-size: 1.3rem;
+        }
+
+        .policy-container {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="policy-container">
+    <!-- Header -->
+    <div class="policy-header">
+        <h1>🔒 गोपनीयता नीति</h1>
+        <p>अंतिम अपडेट: जनवरी 2024</p>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="toc">
+        <h3>📋 विषय सूची</h3>
+        <ul class="toc-list">
+            <li><a href="#about">1. परिचय</a></li>
+            <li><a href="#collection">2. जानकारी संग्रह</a></li>
+            <li><a href="#usage">3. जानकारी का उपयोग</a></li>
+            <li><a href="#security">4. डेटा सुरक्षा</a></li>
+            <li><a href="#rights">5. आपके अधिकार</a></li>
+            <li><a href="#cookies">6. कुकीज़</a></li>
+            <li><a href="#changes">7. नीति में परिवर्तन</a></li>
+            <li><a href="#contact">8. संपर्क करें</a></li>
+        </ul>
+    </div>
+
+    <!-- Section 1: About -->
+    <div class="policy-section" id="about">
+        <h2>1. परिचय</h2>
+        <p>
+            खाद्य पोषण विश्लेषक ("हम", "हमारा") आपकी गोपनीयता का सम्मान करता है। यह गोपनीयता नीति बताती है कि 
+            हम किस प्रकार आपकी व्यक्तिगत जानकारी एकत्र, उपयोग, और सुरक्षित करते हैं।
+        </p>
+        <div class="highlight-box">
+            <strong>महत्वपूर्ण:</strong> इस नीति को पढ़ने के बाद, यदि आप सहमत नहीं हैं, तो कृपया हमारी सेवा का उपयोग न करें।
+        </div>
+    </div>
+
+    <!-- Section 2: Information Collection -->
+    <div class="policy-section" id="collection">
+        <h2>2. जानकारी संग्रह</h2>
+        
+        <h3>2.1 व्यक्तिगत जानकारी</h3>
+        <p>हम निम्नलिखित व्यक्तिगत जानकारी एकत्र कर सकते हैं:</p>
+        <ul class="policy-list">
+            <li>नाम, ईमेल, फोन नंबर (पंजीकरण के समय)</li>
+            <li>खाता पासवर्ड और प्रमाणीकरण जानकारी</li>
+            <li>स्वास्थ्य संबंधी जानकारी (जो आप स्वेच्छा से प्रदान करते हैं)</li>
+            <li>आपकी खोज और विश्लेषण इतिहास</li>
+            <li>अपलोड की गई तस्वीरें और विश्लेषण डेटा</li>
+        </ul>
+
+        <h3>2.2 स्वचालित रूप से एकत्र की गई जानकारी</h3>
+        <ul class="policy-list">
+            <li>आईपी पता</li>
+            <li>ब्राउज़र प्रकार और संस्करण</li>
+            <li>पेज एक्सेस समय और अवधि</li>
+            <li>डिवाइस जानकारी (ऑपरेटिंग सिस्टम, डिवाइस प्रकार)</li>
+            <li>कुकीज़ और ट्रैकिंग डेटा</li>
+        </ul>
+    </div>
+
+    <!-- Section 3: Usage -->
+    <div class="policy-section" id="usage">
+        <h2>3. जानकारी का उपयोग</h2>
+        <p>हम आपकी जानकारी का उपयोग निम्नलिखित के लिए करते हैं:</p>
+        <ul class="policy-list">
+            <li>खाद्य विश्लेषण सेवा प्रदान करने के लिए</li>
+            <li>आपके खाते को प्रबंधित और सुरक्षित करने के लिए</li>
+            <li>व्यक्तिगत सिफारिशें और सुझाव प्रदान करने के लिए</li>
+            <li>सेवा में सुधार करने के लिए</li>
+            <li>आपसे संपर्क करने के लिए (अपडेट, समर्थन)</li>
+            <li>कानूनी दायित्वों का पालन करने के लिए</li>
+            <li>सांख्यिकीय और विश्लेषणात्मक उद्देश्यों के लिए (अनामित डेटा)</li>
+        </ul>
+    </div>
+
+    <!-- Section 4: Security -->
+    <div class="policy-section" id="security">
+        <h2>4. डेटा सुरक्षा</h2>
+        <p>
+            हम आपकी जानकारी को सुरक्षित रखने के लिए प्रतिबद्ध हैं। हम निम्नलिखित सुरक्षा उपाय लागू करते हैं:
+        </p>
+        <ul class="policy-list">
+            <li>एन्क्रिप्शन (SSL/TLS) का उपयोग डेटा ट्रांजिट में</li>
+            <li>एन्क्रिप्टेड डेटाबेस में जानकारी संग्रहीत करना</li>
+            <li>नियमित सुरक्षा ऑडिट और परीक्षण</li>
+            <li>फायरवॉल और एक्सेस नियंत्रण</li>
+            <li>कर्मचारी गोपनीयता प्रशिक्षण</li>
+            <li>सुरक्षित सर्वर और डेटा सेंटर</li>
+        </ul>
+        <div class="highlight-box">
+            <strong>नोट:</strong> हालांकि हम मजबूत सुरक्षा उपाय लागू करते हैं, कोई भी ऑनलाइन सेवा 100% सुरक्षित नहीं है।
+        </div>
+    </div>
+
+    <!-- Section 5: Rights -->
+    <div class="policy-section" id="rights">
+        <h2>5. आपके अधिकार</h2>
+        <p>
+            आपके पास अपनी व्यक्तिगत जानकारी के बारे में निम्नलिखित अधिकार हैं:
+        </p>
+        <ul class="policy-list">
+            <li><strong>पहुँच:</strong> आपकी जानकारी देखने का अधिकार</li>
+            <li><strong>सुधार:</strong> गलत जानकारी को ठीक करने का अधिकार</li>
+            <li><strong>हटाना:</strong> अपनी जानकारी मिटवाने का अधिकार</li>
+            <li><strong>पोर्टेबिलिटी:</strong> अपनी जानकारी निर्यात करने का अधिकार</li>
+            <li><strong>आपत्ति:</strong> कुछ प्रसंस्करण में आपत्ति करने का अधिकार</li>
+            <li><strong>सहमति वापस लेना:</strong> सहमति वापस लेने का अधिकार</li>
+        </ul>
+        <p>
+            इन अधिकारों का प्रयोग करने के लिए, कृपया <a href="{% url 'contact' %}" class="contact-link">संपर्क करें</a>
+        </p>
+    </div>
+
+    <!-- Section 6: Cookies -->
+    <div class="policy-section" id="cookies">
+        <h2>6. कुकीज़</h2>
+        <p>
+            हम अपनी सेवा में सुधार के लिए कुकीज़ का उपयोग करते हैं। कुकीज़ छोटी फाइलें हैं जो आपके ब्राउज़र में 
+            संग्रहीत होती हैं।
+        </p>
+        <h3>कुकीज़ के प्रकार:</h3>
+        <ul class="policy-list">
+            <li><strong>आवश्यक कुकीज़:</strong> सेवा कार्य करने के लिए आवश्यक</li>
+            <li><strong>प्राथमिकता कुकीज़:</strong> आपकी प्राथमिकताएं याद रखने के लिए</li>
+            <li><strong>विश्लेषणात्मक कुकीज़:</strong> उपयोग पैटर्न समझने के लिए</li>
+            <li><strong>विपणन कुकीज़:</strong> विज्ञापन लक्ष्यीकरण के लिए</li>
+        </ul>
+        <p>
+            आप अपने ब्राउज़र सेटिंग्स में कुकीज़ को अक्षम कर सकते हैं, लेकिन यह कुछ सेवाएं प्रभावित कर सकता है।
+        </p>
+    </div>
+
+    <!-- Section 7: Policy Changes -->
+    <div class="policy-section" id="changes">
+        <h2>7. नीति में परिवर्तन</h2>
+        <p>
+            हम समय-समय पर इस गोपनीयता नीति को अपडेट कर सकते हैं। महत्वपूर्ण परिवर्तनों की स्थिति में, 
+            हम आपको ईमेल के माध्यम से सूचित करेंगे।
+        </p>
+        <p>
+            इस पृष्ठ पर "अंतिम अपडेट" तारीख से पहले, सभी परिवर्तन यहाँ प्रकाशित किए जाते हैं।
+        </p>
+    </div>
+
+    <!-- Section 8: Contact -->
+    <div class="policy-section" id="contact">
+        <h2>8. संपर्क करें</h2>
+        <p>
+            यदि आपके पास इस गोपनीयता नीति के बारे में कोई प्रश्न हैं, तो कृपया संपर्क करें:
+        </p>
+        <div class="highlight-box">
+            <strong>ईमेल:</strong> <a href="mailto:privacy@foodnutritionanalyzer.in" class="contact-link">privacy@foodnutritionanalyzer.in</a><br>
+            <strong>पता:</strong> गोरखपुर, उत्तर प्रदेश, भारत<br>
+            <strong>फोन:</strong> <a href="tel:+919876543210" class="contact-link">+91 98765 43210</a>
+        </div>
+    </div>
+
+    <!-- Update Note -->
+    <div class="update-note">
+        <strong>अंतिम अपडेट:</strong> यह नीति जनवरी 2024 में अपडेट की गई थी और सभी वर्तमान कानूनों के अनुरूप है।
+        नियमित रूप से इस पृष्ठ को दोबारा देखें।
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+
+{% block title %}खाद्य पोषण विश्लेषक - होम{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9)),
+                    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="1200" height="600" fill="url(%23grid)"/></svg>');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 6rem 2rem;
+        text-align: center;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 107, 107, 0.1);
+        border-radius: 50%;
+        top: -50px;
+        right: -50px;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .hero::after {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: rgba(78, 205, 196, 0.1);
+        border-radius: 50%;
+        bottom: -30px;
+        left: -30px;
+        animation: float 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .hero-content {
+        max-width: 800px;
+        position: relative;
+        z-index: 1;
+        animation: slideInUp 0.8s ease-out;
+    }
+
+    .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        animation: slideInUp 0.8s ease-out 0.2s both;
+    }
+
+    .hero p {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+        animation: slideInUp 0.8s ease-out 0.4s both;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        animation: slideInUp 0.8s ease-out 0.6s both;
+    }
+
+    .btn-large {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        border: none;
+        cursor: pointer;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-white {
+        background: white;
+        color: #667eea;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-white:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+    .btn-outline:hover {
+        background: white;
+        color: #667eea;
+        transform: translateY(-3px);
+    }
+
+    /* Features Section */
+    .features {
+        background: white;
+        padding: 4rem 2rem;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        color: var(--dark);
+    }
+
+    .section-title span {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .features-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+
+    .feature-card {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        cursor: pointer;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--primary);
+        box-shadow: 0 20px 40px rgba(255, 107, 107, 0.2);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    .feature-card:nth-child(2) .feature-icon {
+        animation-delay: 0.2s;
+    }
+
+    .feature-card:nth-child(3) .feature-icon {
+        animation-delay: 0.4s;
+    }
+
+    .feature-card:nth-child(4) .feature-icon {
+        animation-delay: 0.6s;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+    }
+
+    .feature-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--dark);
+    }
+
+    .feature-card p {
+        color: #7f8c8d;
+        line-height: 1.8;
+    }
+
+    /* CTA Section */
+    .cta {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+        margin-top: 3rem;
+    }
+
+    .cta h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .cta p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Stats Section */
+    .stats {
+        background: white;
+        padding: 3rem 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: -4rem auto 0;
+        position: relative;
+        z-index: 10;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: slideInUp 0.8s ease-out;
+    }
+
+    .stat-label {
+        color: #7f8c8d;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+        }
+
+        .hero-buttons {
+            flex-direction: column;
+        }
+
+        .btn-large {
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .stats {
+            grid-template-columns: 1fr;
+            margin-top: -2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero">
+    <div class="hero-content">
+        <h1>🍎 आपके खाने का स्मार्ट विश्लेषण</h1>
+        <p>कृत्रिम बुद्धिमत्ता का उपयोग करके अपने खाद्य पदार्थों का पोषण विश्लेषण करें और जानें कि आप कौन सा खाना खा सकते हैं</p>
+        <div class="hero-buttons">
+            <a href="{% url 'generator' %}" class="btn-large btn-white">शुरू करें</a>
+            <a href="{% url 'services' %}" class="btn-large btn-outline">और जानें</a>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="container">
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">खाद्य पदार्थ</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">15+</div>
+            <div class="stat-label">स्वास्थ्य स्थितियाँ</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">10,000+</div>
+            <div class="stat-label">खुश उपयोगकर्ता</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">सटीकता</div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<section class="features">
+    <h2 class="section-title">हमारी <span>विशेषताएं</span></h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📷</div>
+            <h3>तस्वीर अपलोड करें</h3>
+            <p>अपने खाने की फोटो लें और हमारे AI को विश्लेषण करने दें</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🧬</div>
+            <h3>पोषण विश्लेषण</h3>
+            <p>कैलोरी, प्रोटीन, कार्ब्स और अन्य सभी पोषक तत्वों की जानकारी पाएं</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">⚕️</div>
+            <h3>स्वास्थ्य सुझाव</h3>
+            <p>अपनी स्वास्थ्य स्थिति के अनुसार व्यक्तिगत सिफारिशें प्राप्त करें</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>विस्तृत रिपोर्ट</h3>
+            <p>पूरी जानकारी के साथ प्रिंट करने योग्य रिपोर्ट डाउनलोड करें</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+    <div class="container">
+        <h2>अपना स्वास्थ्य सफर शुरू करें</h2>
+        <p>आज ही खाद्य पदार्थों का विश्लेषण शुरू करें और एक स्वस्थ जीवन की ओर बढ़ें</p>
+        <a href="{% url 'generator' %}" class="btn-large btn-white">अभी शुरू करें</a>
+    </div>
+</section>
+{% endblock %}

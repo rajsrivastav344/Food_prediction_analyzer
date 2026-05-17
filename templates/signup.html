@@ -1,0 +1,394 @@
+{% extends 'base.html' %}
+
+{% block title %}साइन अप करें - खाद्य पोषण विश्लेषक{% endblock %}
+
+{% block extra_css %}
+<style>
+    .signup-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+    }
+
+    .signup-box {
+        background: white;
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 500px;
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .signup-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .signup-header h1 {
+        font-size: 1.8rem;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .signup-header p {
+        color: #95a5a6;
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        color: var(--dark);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.9rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+    }
+
+    .form-group input.error {
+        border-color: var(--danger);
+        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+
+    .form-group input.success {
+        border-color: var(--success);
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    }
+
+    .form-hint {
+        font-size: 0.85rem;
+        color: #95a5a6;
+        margin-top: 0.3rem;
+    }
+
+    .password-strength {
+        display: flex;
+        gap: 0.3rem;
+        margin-top: 0.5rem;
+    }
+
+    .strength-bar {
+        flex: 1;
+        height: 4px;
+        background: #e0e0e0;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .strength-bar.weak { background: var(--danger); }
+    .strength-bar.medium { background: var(--warning); }
+    .strength-bar.strong { background: var(--success); }
+
+    .terms-checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .terms-checkbox input {
+        width: auto;
+        margin-top: 0.3rem;
+        cursor: pointer;
+    }
+
+    .terms-checkbox a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .terms-checkbox a:hover {
+        text-decoration: underline;
+    }
+
+    .signup-btn {
+        width: 100%;
+        padding: 0.9rem;
+        background: linear-gradient(135deg, var(--secondary), #4ECDC4);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+    }
+
+    .signup-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(78, 205, 196, 0.6);
+    }
+
+    .signup-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .signup-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+
+    .signup-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .signup-footer a:hover {
+        text-decoration: underline;
+    }
+
+    .error-message {
+        background: rgba(231, 76, 60, 0.1);
+        border-left: 4px solid var(--danger);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        color: var(--danger);
+        display: none;
+        animation: slideInUp 0.3s ease-out;
+    }
+
+    .error-message.show {
+        display: block;
+    }
+
+    .success-message {
+        background: rgba(46, 204, 113, 0.1);
+        border-left: 4px solid var(--success);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        color: var(--success);
+        display: none;
+        animation: slideInUp 0.3s ease-out;
+    }
+
+    .success-message.show {
+        display: block;
+    }
+
+    @media (max-width: 480px) {
+        .signup-box {
+            padding: 2rem;
+        }
+
+        .signup-header h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="signup-container">
+    <div class="signup-box">
+        <div class="signup-header">
+            <h1>✨ साइन अप करें</h1>
+            <p>एक नया खाता बनाएं</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="signupForm" onsubmit="handleSignup(event)">
+            <div class="form-group">
+                <label for="firstName">नाम *</label>
+                <input 
+                    type="text" 
+                    id="firstName" 
+                    name="firstName" 
+                    required
+                    placeholder="आपका नाम दर्ज करें"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="email">ईमेल *</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required
+                    placeholder="आपका ईमेल दर्ज करें"
+                >
+                <div class="form-hint">हम आपको कभी spam नहीं भेजेंगे</div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">उपयोगकर्ता नाम *</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    required
+                    placeholder="एक उपयोगकर्ता नाम चुनें"
+                >
+                <div class="form-hint">3-20 characters, letters और numbers only</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">पासवर्ड *</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required
+                    placeholder="एक मजबूत पासवर्ड बनाएं"
+                    onkeyup="checkPasswordStrength(this.value)"
+                >
+                <div class="form-hint">कम से कम 8 characters, अक्षर और numbers शामिल करें</div>
+                <div class="password-strength" id="passwordStrength"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">पासवर्ड की पुष्टि करें *</label>
+                <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    name="confirmPassword" 
+                    required
+                    placeholder="पासवर्ड फिर से दर्ज करें"
+                >
+            </div>
+
+            <div class="terms-checkbox">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">
+                    मैं <a href="{% url 'policy' %}" target="_blank">नियम और शर्तें</a> तथा 
+                    <a href="{% url 'policy' %}" target="_blank">गोपनीयता नीति</a> से सहमत हूँ
+                </label>
+            </div>
+
+            <button type="submit" class="signup-btn" id="signupBtn">
+                साइन अप करें
+            </button>
+        </form>
+
+        <div class="signup-footer">
+            पहले से खाता है? <a href="{% url 'login' %}">लॉगिन करें</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkPasswordStrength(password) {
+        const strengthContainer = document.getElementById('passwordStrength');
+        let strength = 0;
+
+        if (password.length >= 8) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+        strengthContainer.innerHTML = '';
+        for (let i = 0; i < 5; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'strength-bar';
+            
+            if (i < strength) {
+                if (strength <= 2) bar.classList.add('weak');
+                else if (strength <= 3) bar.classList.add('medium');
+                else bar.classList.add('strong');
+            }
+            
+            strengthContainer.appendChild(bar);
+        }
+    }
+
+    async function handleSignup(event) {
+        event.preventDefault();
+
+        const firstName = document.getElementById('firstName').value;
+        const email = document.getElementById('email').value;
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const signupBtn = document.getElementById('signupBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        // Clear messages
+        errorMessage.classList.remove('show');
+        successMessage.classList.remove('show');
+
+        // Validation
+        if (password !== confirmPassword) {
+            errorMessage.textContent = '✗ पासवर्ड मेल नहीं खाते';
+            errorMessage.classList.add('show');
+            return;
+        }
+
+        if (password.length < 8) {
+            errorMessage.textContent = '✗ पासवर्ड कम से कम 8 characters होना चाहिए';
+            errorMessage.classList.add('show');
+            return;
+        }
+
+        signupBtn.disabled = true;
+        signupBtn.textContent = 'साइन अप हो रहे हैं...';
+
+        try {
+            const response = await fetch('/api/signup/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    email: email,
+                    username: username,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                successMessage.textContent = '✓ साइन अप सफल! लॉगिन पेज पर जा रहे हैं...';
+                successMessage.classList.add('show');
+
+                setTimeout(() => {
+                    window.location.href = '{% url "login" %}';
+                }, 2000);
+            } else {
+                errorMessage.textContent = '✗ ' + data.message;
+                errorMessage.classList.add('show');
+            }
+        } catch (error) {
+            errorMessage.textContent = '✗ त्रुटि: ' + error.message;
+            errorMessage.classList.add('show');
+        } finally {
+            signupBtn.disabled = false;
+            signupBtn.textContent = 'साइन अप करें';
+        }
+    }
+</script>
+{% endblock %}

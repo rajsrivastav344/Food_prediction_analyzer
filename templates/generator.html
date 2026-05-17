@@ -1,0 +1,787 @@
+{% extends 'base.html' %}
+
+{% block title %}खाद्य विश्लेषक - विश्लेषण करें{% endblock %}
+
+{% block extra_css %}
+<style>
+    .generator-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .page-header h1 {
+        font-size: 2.5rem;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+        font-size: 1.1rem;
+        color: #7f8c8d;
+    }
+
+    .analyzer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 3rem;
+    }
+
+    /* Upload Section */
+    .upload-section {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        animation: slideInUp 0.6s ease-out 0.1s both;
+    }
+
+    .upload-area {
+        border: 3px dashed var(--primary);
+        border-radius: 15px;
+        padding: 3rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), rgba(78, 205, 196, 0.05));
+    }
+
+    .upload-area:hover {
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1));
+        transform: scale(1.02);
+    }
+
+    .upload-area.dragover {
+        border-color: var(--secondary);
+        background: linear-gradient(135deg, rgba(78, 205, 196, 0.15), rgba(102, 126, 234, 0.15));
+        transform: scale(1.05);
+    }
+
+    .upload-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: bounce 2s ease-in-out infinite;
+    }
+
+    .upload-text {
+        color: var(--dark);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .upload-subtext {
+        color: #95a5a6;
+        font-size: 0.9rem;
+    }
+
+    #imageInput {
+        display: none;
+    }
+
+    .preview-container {
+        margin-top: 2rem;
+        display: none;
+    }
+
+    .preview-container.show {
+        display: block;
+        animation: slideInUp 0.3s ease-out;
+    }
+
+    .image-preview {
+        max-width: 100%;
+        height: auto;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 1rem;
+    }
+
+    .preview-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .preview-actions button {
+        padding: 0.7rem 1.5rem;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-analyze {
+        background: linear-gradient(135deg, var(--primary), #FF8A80);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    .btn-analyze:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    }
+
+    .btn-remove {
+        background: transparent;
+        color: var(--dark);
+        border: 2px solid #e0e0e0;
+    }
+
+    .btn-remove:hover {
+        background: #f5f5f5;
+        border-color: var(--dark);
+    }
+
+    /* Results Section */
+    .results-section {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        animation: slideInUp 0.6s ease-out 0.2s both;
+    }
+
+    .results-title {
+        font-size: 1.5rem;
+        color: var(--dark);
+        margin-bottom: 1.5rem;
+    }
+
+    .results-content {
+        display: none;
+    }
+
+    .results-content.show {
+        display: block;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .nutrition-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 0.5rem;
+    }
+
+    .nutrition-item:last-child {
+        border-bottom: none;
+    }
+
+    .nutrition-label {
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    .nutrition-value {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .nutrition-bar {
+        background: #eee;
+        height: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 0.5rem;
+    }
+
+    .nutrition-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        transition: width 0.5s ease;
+    }
+
+    /* Health Conditions Section */
+    .health-section {
+        margin-top: 2rem;
+        grid-column: 1 / -1;
+    }
+
+    .health-section h3 {
+        font-size: 1.3rem;
+        color: var(--dark);
+        margin-bottom: 1.5rem;
+    }
+
+    .health-conditions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .health-checkbox {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: #f9f9f9;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .health-checkbox:hover {
+        background: #f0f0f0;
+        border-color: var(--primary);
+    }
+
+    .health-checkbox input {
+        margin-right: 0.5rem;
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Health Report */
+    .health-report {
+        display: none;
+        grid-column: 1 / -1;
+    }
+
+    .health-report.show {
+        display: block;
+        animation: slideInUp 0.3s ease-out;
+    }
+
+    .report-card {
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 1rem;
+        border-left: 5px solid var(--primary);
+    }
+
+    .report-card.suitable {
+        border-left-color: var(--success);
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.05), rgba(46, 204, 113, 0.1));
+    }
+
+    .report-card.not-suitable {
+        border-left-color: var(--danger);
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(231, 76, 60, 0.1));
+    }
+
+    .report-title {
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .report-status {
+        font-weight: 600;
+        margin: 0.5rem 0;
+    }
+
+    .suitable-yes {
+        color: var(--success);
+    }
+
+    .suitable-no {
+        color: var(--danger);
+    }
+
+    .warnings {
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .warning-item {
+        font-size: 0.9rem;
+        color: var(--warning);
+        margin-bottom: 0.3rem;
+    }
+
+    .loading {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .loading.show {
+        display: block;
+    }
+
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid var(--primary);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        color: var(--dark);
+        font-weight: 600;
+    }
+
+    /* Generate Report Button */
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        grid-column: 1 / -1;
+    }
+
+    .btn-generate {
+        flex: 1;
+        padding: 1rem;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .btn-generate-report {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    .btn-generate-report:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    }
+
+    .btn-generate-report:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .btn-download {
+        background: var(--success);
+        color: white;
+        box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+    }
+
+    .btn-download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6);
+    }
+
+    .recommendations {
+        background: linear-gradient(135deg, rgba(255, 230, 109, 0.1), rgba(243, 156, 18, 0.1));
+        border-left: 5px solid var(--accent);
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+    }
+
+    .recommendations h4 {
+        color: var(--dark);
+        margin-bottom: 1rem;
+    }
+
+    .recommendation-item {
+        color: #7f8c8d;
+        margin-bottom: 0.5rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .recommendation-item::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--success);
+        font-weight: 700;
+    }
+
+    @media (max-width: 968px) {
+        .analyzer-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .health-conditions-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .health-conditions-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="generator-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>🔍 खाद्य विश्लेषक</h1>
+        <p>अपने खाने की तस्वीर अपलोड करें और तुरंत पोषण विश्लेषण प्राप्त करें</p>
+    </div>
+
+    <!-- Main Analyzer -->
+    <div class="analyzer-grid">
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h2 style="margin-bottom: 1.5rem; color: var(--dark);">1. तस्वीर अपलोड करें</h2>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📸</div>
+                <div class="upload-text">अपनी तस्वीर यहाँ डालें</div>
+                <div class="upload-subtext">JPG, PNG या PDF (5MB तक)</div>
+            </div>
+
+            <input type="file" id="imageInput" accept=".jpg,.jpeg,.png,.pdf" />
+
+            <div class="preview-container" id="previewContainer">
+                <img id="imagePreview" class="image-preview" alt="Preview" />
+                <div class="preview-actions">
+                    <button class="btn-analyze" id="analyzeBtn">विश्लेषण करें</button>
+                    <button class="btn-remove" id="removeBtn">हटाएं</button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <div class="loading-text">विश्लेषण जारी है...</div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section">
+            <h2 class="results-title">2. पोषण परिणाम</h2>
+            
+            <div class="results-content" id="resultsContent">
+                <!-- Detected Foods -->
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--dark); margin-bottom: 1rem;">पहचाने गए खाद्य पदार्थ:</h4>
+                    <div id="detectedFoods" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
+                </div>
+
+                <!-- Nutrition Facts -->
+                <h4 style="color: var(--dark); margin-bottom: 1rem;">पोषण तथ्य (100g):</h4>
+                <div id="nutritionDetails"></div>
+            </div>
+        </div>
+
+        <!-- Health Conditions Selection -->
+        <div class="upload-section health-section">
+            <h2 style="margin-bottom: 1.5rem; color: var(--dark);">3. स्वास्थ्य स्थिति चुनें</h2>
+            
+            <div class="health-conditions-grid" id="healthConditions">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-generate btn-generate-report" id="generateReportBtn" disabled>
+                    🔍 रिपोर्ट जेनरेट करें
+                </button>
+                <button class="btn-generate btn-download" id="downloadBtn" style="display: none;">
+                    📥 रिपोर्ट डाउनलोड करें
+                </button>
+            </div>
+        </div>
+
+        <!-- Health Report -->
+        <div class="health-report" id="healthReport">
+            <h2 style="margin-bottom: 1.5rem; color: var(--dark);">4. स्वास्थ्य सुझाव</h2>
+            <div id="reportContent"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // File Upload Handling
+    const uploadArea = document.getElementById('uploadArea');
+    const imageInput = document.getElementById('imageInput');
+    const previewContainer = document.getElementById('previewContainer');
+    const imagePreview = document.getElementById('imagePreview');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const removeBtn = document.getElementById('removeBtn');
+    const loading = document.getElementById('loading');
+    const resultsContent = document.getElementById('resultsContent');
+    const healthConditionsDiv = document.getElementById('healthConditions');
+    const generateReportBtn = document.getElementById('generateReportBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const healthReport = document.getElementById('healthReport');
+    const reportContent = document.getElementById('reportContent');
+
+    let selectedFile = null;
+    let analysisResults = null;
+    let healthProfiles = [];
+
+    // Upload Area Click
+    uploadArea.addEventListener('click', () => imageInput.click());
+
+    // Drag and Drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileSelect(files[0]);
+        }
+    });
+
+    // File Input Change
+    imageInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFileSelect(e.target.files[0]);
+        }
+    });
+
+    function handleFileSelect(file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreview.src = e.target.result;
+            previewContainer.classList.add('show');
+            uploadArea.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Remove Image
+    removeBtn.addEventListener('click', () => {
+        selectedFile = null;
+        imageInput.value = '';
+        previewContainer.classList.remove('show');
+        uploadArea.style.display = 'block';
+        resultsContent.classList.remove('show');
+        healthReport.classList.remove('show');
+        generateReportBtn.disabled = true;
+        downloadBtn.style.display = 'none';
+    });
+
+    // Analyze Button
+    analyzeBtn.addEventListener('click', async () => {
+        if (!selectedFile) return;
+
+        loading.classList.add('show');
+        analyzeBtn.disabled = true;
+
+        try {
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+
+            const response = await fetch('/api/analyze/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                analysisResults = data.nutrition_data;
+                displayResults(data);
+                generateReportBtn.disabled = false;
+            } else {
+                alert('विश्लेषण विफल: ' + data.message);
+            }
+        } catch (error) {
+            alert('त्रुटि: ' + error.message);
+        } finally {
+            loading.classList.remove('show');
+            analyzeBtn.disabled = false;
+        }
+    });
+
+    function displayResults(data) {
+        // Display detected foods
+        const detectedFoodsDiv = document.getElementById('detectedFoods');
+        detectedFoodsDiv.innerHTML = data.foods_detected.map(food => 
+            `<span style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600;">${food}</span>`
+        ).join('');
+
+        // Display nutrition details
+        const nutritionDiv = document.getElementById('nutritionDetails');
+        const nutrition = data.nutrition_data.total_nutrition;
+        
+        const maxValues = {
+            calories: 1000,
+            protein: 50,
+            carbs: 200,
+            fat: 80,
+            fiber: 30,
+            sugar: 50
+        };
+
+        const nutritionItems = [
+            { label: 'कैलोरी', value: `${nutrition.calories.toFixed(1)} kcal`, key: 'calories' },
+            { label: 'प्रोटीन', value: `${nutrition.protein.toFixed(1)}g`, key: 'protein' },
+            { label: 'कार्बोहाइड्रेट', value: `${nutrition.carbs.toFixed(1)}g`, key: 'carbs' },
+            { label: 'वसा', value: `${nutrition.fat.toFixed(1)}g`, key: 'fat' },
+            { label: 'फाइबर', value: `${nutrition.fiber.toFixed(1)}g`, key: 'fiber' },
+            { label: 'शर्करा', value: `${nutrition.sugar.toFixed(1)}g`, key: 'sugar' }
+        ];
+
+        nutritionDiv.innerHTML = nutritionItems.map(item => {
+            const percentage = Math.min((nutrition[item.key] / maxValues[item.key]) * 100, 100);
+            return `
+                <div class="nutrition-item">
+                    <span class="nutrition-label">${item.label}</span>
+                    <span class="nutrition-value">${item.value}</span>
+                </div>
+                <div class="nutrition-bar">
+                    <div class="nutrition-bar-fill" style="width: ${percentage}%"></div>
+                </div>
+            `;
+        }).join('');
+
+        resultsContent.classList.add('show');
+    }
+
+    // Load Health Conditions
+    async function loadHealthConditions() {
+        try {
+            const response = await fetch('/api/health-conditions/');
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                healthProfiles = data.health_conditions;
+                healthConditionsDiv.innerHTML = data.health_conditions.map(condition => `
+                    <label class="health-checkbox">
+                        <input type="checkbox" value="${condition.hindi}" class="health-condition-checkbox" />
+                        <span>${condition.hindi}<br><small style="color: #95a5a6;">${condition.english}</small></span>
+                    </label>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Error loading health conditions:', error);
+        }
+    }
+
+    // Generate Report
+    generateReportBtn.addEventListener('click', async () => {
+        const selectedConditions = Array.from(document.querySelectorAll('.health-condition-checkbox:checked'))
+            .map(cb => cb.value);
+
+        if (selectedConditions.length === 0) {
+            alert('कृपया कम से कम एक स्वास्थ्य स्थिति चुनें');
+            return;
+        }
+
+        if (!analysisResults) {
+            alert('कृपया पहले तस्वीर का विश्लेषण करें');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/report/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    foods: analysisResults.foods_detected,
+                    health_conditions: selectedConditions,
+                    portions: 1.0
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                displayReport(data.report);
+                healthReport.classList.add('show');
+                downloadBtn.style.display = 'block';
+            }
+        } catch (error) {
+            alert('त्रुटि: ' + error.message);
+        }
+    });
+
+    function displayReport(report) {
+        let html = '';
+
+        // Add recommendations
+        if (report.general_recommendations.length > 0) {
+            html += `
+                <div class="recommendations">
+                    <h4>💡 सामान्य सिफारिशें</h4>
+                    ${report.general_recommendations.map(rec => 
+                        `<div class="recommendation-item">${rec}</div>`
+                    ).join('')}
+                </div>
+            `;
+        }
+
+        // Add health predictions
+        html += '<h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--dark);">स्वास्थ्य विश्लेषण:</h3>';
+        
+        for (const [condition, prediction] of Object.entries(report.health_predictions)) {
+            const className = prediction.suitable ? 'suitable' : 'not-suitable';
+            const status = prediction.suitable ? '✓ उपयुक्त' : '✗ उपयुक्त नहीं';
+            
+            html += `
+                <div class="report-card ${className}">
+                    <div class="report-title">
+                        ${prediction.suitable ? '✓' : '✗'} ${prediction.profile_name_hi}
+                    </div>
+                    <div class="report-status ${prediction.suitable ? 'suitable-yes' : 'suitable-no'}">
+                        ${status}
+                    </div>
+                    ${prediction.warnings.length > 0 ? `
+                        <div class="warnings">
+                            ${prediction.warnings.map(w => `<div class="warning-item">⚠️ ${w}</div>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        reportContent.innerHTML = html;
+    }
+
+    // Download Report
+    downloadBtn.addEventListener('click', () => {
+        const element = document.createElement('a');
+        const file = new Blob([reportContent.innerText], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = `खाद्य-विश्लेषण-रिपोर्ट-${new Date().toLocaleDateString('hi-IN')}.txt`;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    });
+
+    // Initialize
+    loadHealthConditions();
+</script>
+{% endblock %}

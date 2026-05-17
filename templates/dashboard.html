@@ -1,0 +1,520 @@
+{% extends 'base.html' %}
+
+{% block title %}डैशबोर्ड - खाद्य पोषण विश्लेषक{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+    }
+
+    .dashboard-header {
+        margin-bottom: 3rem;
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .dashboard-title {
+        font-size: 2.5rem;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .dashboard-subtitle {
+        color: #95a5a6;
+        font-size: 1.1rem;
+    }
+
+    .user-info {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .user-avatar {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+    }
+
+    .user-details h2 {
+        color: var(--dark);
+        margin-bottom: 0.3rem;
+    }
+
+    .user-details p {
+        color: #95a5a6;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .user-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .user-actions a, .user-actions button {
+        padding: 0.7rem 1.5rem;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-settings {
+        background: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+    }
+
+    .btn-settings:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-logout {
+        background: transparent;
+        color: var(--danger);
+        border: 2px solid var(--danger);
+    }
+
+    .btn-logout:hover {
+        background: var(--danger);
+        color: white;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .stat-card:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .stat-card:nth-child(3) {
+        animation-delay: 0.2s;
+    }
+
+    .stat-card:nth-child(4) {
+        animation-delay: 0.3s;
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        color: var(--primary);
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #95a5a6;
+        font-size: 0.95rem;
+    }
+
+    .analysis-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        animation: slideInUp 0.6s ease-out 0.2s both;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        color: var(--dark);
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid var(--secondary);
+        padding-bottom: 0.5rem;
+    }
+
+    .analysis-list {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .analysis-item {
+        display: grid;
+        grid-template-columns: 80px 1fr auto auto;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        background: #f9f9f9;
+        border-radius: 10px;
+        border-left: 5px solid var(--primary);
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .analysis-item:hover {
+        background: #f0f0f0;
+        transform: translateX(5px);
+    }
+
+    .analysis-image {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .analysis-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .analysis-details h3 {
+        color: var(--dark);
+        margin-bottom: 0.3rem;
+    }
+
+    .analysis-details p {
+        color: #95a5a6;
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .analysis-date {
+        color: #bdc3c7;
+        font-size: 0.85rem;
+    }
+
+    .analysis-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .analysis-actions a, .analysis-actions button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-view {
+        background: var(--secondary);
+        color: white;
+    }
+
+    .btn-view:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+    }
+
+    .btn-delete {
+        background: transparent;
+        color: var(--danger);
+        border: 1px solid var(--danger);
+    }
+
+    .btn-delete:hover {
+        background: var(--danger);
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #95a5a6;
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state a {
+        display: inline-block;
+        padding: 0.8rem 2rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+    }
+
+    .loading {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-top: 4px solid var(--primary);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-title {
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .user-actions {
+            justify-content: center;
+        }
+
+        .analysis-item {
+            grid-template-columns: 1fr;
+        }
+
+        .analysis-image {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">📊 आपका डैशबोर्ड</h1>
+        <p class="dashboard-subtitle">अपने विश्लेषण और सांख्यिकी को देखें</p>
+    </div>
+
+    <!-- User Info -->
+    <div class="user-info">
+        <div class="user-avatar" id="userAvatar">👤</div>
+        <div class="user-details">
+            <h2 id="userName">उपयोगकर्ता नाम</h2>
+            <p id="userEmail">email@example.com</p>
+            <p id="memberSince">सदस्य बनाए गए: -</p>
+        </div>
+        <div class="user-actions">
+            <a href="#" class="btn-settings">⚙️ सेटिंग्स</a>
+            <button class="btn-logout" onclick="logout()">🚪 लॉगआउट</button>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <div class="stat-icon">🔍</div>
+            <div class="stat-number" id="analysisCount">0</div>
+            <div class="stat-label">कुल विश्लेषण</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🥘</div>
+            <div class="stat-number" id="foodsCount">0</div>
+            <div class="stat-label">खाद्य पदार्थ</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📄</div>
+            <div class="stat-number" id="reportsCount">0</div>
+            <div class="stat-label">रिपोर्ट्स</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-number" id="favoritesCount">0</div>
+            <div class="stat-label">पसंदीदा</div>
+        </div>
+    </div>
+
+    <!-- Recent Analysis -->
+    <div class="analysis-section">
+        <h2 class="section-title">📋 हाल की विश्लेषण</h2>
+        
+        <div id="analysisContent">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>लोड हो रहा है...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="analysis-section">
+        <h2 class="section-title">🚀 त्वरित कार्य</h2>
+        
+        <div class="analysis-list">
+            <div class="analysis-item" style="border-left-color: var(--primary); cursor: pointer;" onclick="location.href='{% url 'generator' %}'">
+                <div style="font-size: 2rem; text-align: center;">➕</div>
+                <div class="analysis-details">
+                    <h3>नया विश्लेषण करें</h3>
+                    <p>अपने खाने की एक नई तस्वीर अपलोड करें</p>
+                </div>
+            </div>
+
+            <div class="analysis-item" style="border-left-color: var(--secondary); cursor: pointer;" onclick="location.href='{% url 'services' %}'">
+                <div style="font-size: 2rem; text-align: center;">📚</div>
+                <div class="analysis-details">
+                    <h3>सेवाएं जानें</h3>
+                    <p>हमारी सभी सेवाओं के बारे में जानें</p>
+                </div>
+            </div>
+
+            <div class="analysis-item" style="border-left-color: var(--accent); cursor: pointer;" onclick="location.href='{% url 'contact' %}'">
+                <div style="font-size: 2rem; text-align: center;">📧</div>
+                <div class="analysis-details">
+                    <h3>संपर्क करें</h3>
+                    <p>किसी प्रश्न के लिए हमसे संपर्क करें</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Load user data
+    async function loadUserData() {
+        try {
+            const response = await fetch('/api/user/profile/');
+            if (response.ok) {
+                const data = await response.json();
+                updateUserInfo(data);
+            }
+        } catch (error) {
+            console.error('Error loading user data:', error);
+        }
+    }
+
+    function updateUserInfo(userData) {
+        document.getElementById('userName').textContent = userData.first_name || userData.username;
+        document.getElementById('userEmail').textContent = userData.email;
+        document.getElementById('analysisCount').textContent = userData.analysis_count || 0;
+        document.getElementById('foodsCount').textContent = userData.total_foods || 0;
+        document.getElementById('reportsCount').textContent = userData.report_count || 0;
+        document.getElementById('favoritesCount').textContent = userData.favorites_count || 0;
+        
+        // Generate avatar
+        const initials = userData.first_name ? userData.first_name.charAt(0).toUpperCase() : userData.username.charAt(0).toUpperCase();
+        document.getElementById('userAvatar').textContent = initials;
+    }
+
+    // Load recent analysis
+    async function loadRecentAnalysis() {
+        try {
+            const response = await fetch('/api/analysis/recent/');
+            if (response.ok) {
+                const data = await response.json();
+                displayAnalysis(data.results || []);
+            }
+        } catch (error) {
+            console.error('Error loading analysis:', error);
+        }
+    }
+
+    function displayAnalysis(analyses) {
+        const container = document.getElementById('analysisContent');
+
+        if (analyses.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <p>अभी कोई विश्लेषण नहीं है</p>
+                    <a href="{% url 'generator' %}">पहला विश्लेषण शुरू करें</a>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="analysis-list">
+                ${analyses.map(analysis => `
+                    <div class="analysis-item">
+                        <div class="analysis-image">
+                            <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                                🍽️
+                            </div>
+                        </div>
+                        <div class="analysis-details">
+                            <h3>${analysis.foods_detected?.join(', ') || 'विश्लेषण'}</h3>
+                            <p>Calories: ${analysis.nutrition_data?.total_nutrition?.calories || 0} kcal</p>
+                            <p class="analysis-date">${new Date(analysis.created_at).toLocaleDateString('hi-IN')}</p>
+                        </div>
+                        <div class="analysis-actions">
+                            <a href="#" class="btn-view">देखें</a>
+                            <button class="btn-delete" onclick="deleteAnalysis('${analysis.id}')">हटाएं</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function deleteAnalysis(id) {
+        if (confirm('क्या आप इस विश्लेषण को हटाना चाहते हैं?')) {
+            // Implement delete functionality
+            console.log('Delete analysis:', id);
+        }
+    }
+
+    function logout() {
+        if (confirm('क्या आप लॉगआउट करना चाहते हैं?')) {
+            fetch('/api/logout/').then(() => {
+                window.location.href = '{% url "home" %}';
+            });
+        }
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+        loadUserData();
+        loadRecentAnalysis();
+    });
+</script>
+{% endblock %}
